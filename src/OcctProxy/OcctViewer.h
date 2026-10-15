@@ -1,4 +1,4 @@
-// OcctViewer.h - OpenGL 3D viewer bound to a Win32 window handle (HWND).
+﻿// OcctViewer.h - Win32 윈도 핸들(HWND)에 바인딩되는 OpenGL 3D 뷰어.
 #pragma once
 
 #include "Common.h"
@@ -35,8 +35,8 @@ namespace OcctProxy
     Front, Back, Top, Bottom, Left, Right, Isometric
   };
 
-  /// Encapsulates V3d_Viewer / V3d_View / AIS_InteractiveContext for one window.
-  /// Create it from a WinForms control: viewer.Init(control.Handle).
+  /// 윈도 하나에 대한 V3d_Viewer / V3d_View / AIS_InteractiveContext를 캡슐화한다.
+  /// WinForms 컨트롤에서 viewer.Init(control.Handle)로 생성한다.
   public ref class OcctViewer
   {
   public:
@@ -52,7 +52,7 @@ namespace OcctProxy
       myDriver().Nullify();
     }
 
-    /// Creates the OpenGL context on the given HWND. Returns false on failure.
+    /// 주어진 HWND에 OpenGL 컨텍스트를 생성한다. 실패하면 false를 반환.
     bool Init(System::IntPtr hwnd)
     {
       OCCT_TRY
@@ -92,23 +92,23 @@ namespace OcctProxy
 
     property bool IsInitialized { bool get() { return !myView().IsNull(); } }
 
-    // ---- window plumbing ---------------------------------------------------
+    // ---- 윈도 연동 ---------------------------------------------------------
 
-    /// Call from the control's Resize event.
+    /// 컨트롤의 Resize 이벤트에서 호출.
     void Resize()
     {
       if (!myView().IsNull()) { myView()->MustBeResized(); }
     }
 
-    /// Call from the control's Paint event.
+    /// 컨트롤의 Paint 이벤트에서 호출.
     void Redraw()
     {
       if (!myView().IsNull()) { myView()->Redraw(); }
     }
 
-    // ---- scene -------------------------------------------------------------
+    // ---- 장면 --------------------------------------------------------------
 
-    /// Displays a shape with the given RGB colour (components in 0..1).
+    /// 지정한 RGB 색상(각 성분 0..1)으로 형상을 표시한다.
     void Display(OcctShape^ shape, double r, double g, double b, bool update)
     {
       if (shape == nullptr || shape->IsNull || myContext().IsNull()) return;
@@ -138,7 +138,7 @@ namespace OcctProxy
       myView()->Redraw();
     }
 
-    /// Switches every displayed object (and the default) to wireframe or shaded.
+    /// 표시 중인 모든 객체(및 기본값)를 와이어프레임 또는 셰이디드로 전환한다.
     void SetDisplayMode(DisplayMode mode)
     {
       if (myContext().IsNull()) return;
@@ -179,7 +179,7 @@ namespace OcctProxy
       FitAll();
     }
 
-    // ---- mouse interaction (pixel coordinates of the control) --------------
+    // ---- 마우스 상호작용 (컨트롤의 픽셀 좌표) ---------------------------------
 
     void StartRotation(int x, int y)
     {
@@ -191,30 +191,30 @@ namespace OcctProxy
       if (!myView().IsNull()) { myView()->Rotation(x, y); }
     }
 
-    /// Pans by a pixel delta.
+    /// 픽셀 델타만큼 화면을 이동(팬)한다.
     void Pan(int dx, int dy)
     {
       if (!myView().IsNull()) { myView()->Pan(dx, dy); }
     }
 
-    /// Zooms around the given pixel; factor > 1 zooms in, < 1 zooms out.
+    /// 지정한 픽셀을 중심으로 줌한다. factor > 1이면 확대, < 1이면 축소.
     void ZoomAt(int x, int y, double factor)
     {
       if (myView().IsNull()) return;
       myView()->StartZoomAtPoint(x, y);
-      // ZoomAtPoint derives the coefficient from the pixel delta; translate factor to a delta.
+      // ZoomAtPoint는 픽셀 델타로부터 계수를 구하므로 factor를 델타로 환산한다.
       const int aDelta = static_cast<int>((factor - 1.0) * 100.0);
       myView()->ZoomAtPoint(x, y, x + aDelta, y);
     }
 
-    /// Dynamic highlighting of the entity under the cursor.
+    /// 커서 아래 엔티티를 동적으로 하이라이트한다.
     void MoveTo(int x, int y)
     {
       if (myContext().IsNull()) return;
       myContext()->MoveTo(x, y, myView(), true);
     }
 
-    /// Selects the detected (highlighted) entity, replacing the current selection.
+    /// 감지된(하이라이트된) 엔티티를 선택하고 기존 선택을 대체한다.
     void Select()
     {
       if (myContext().IsNull()) return;
@@ -222,7 +222,7 @@ namespace OcctProxy
       myContext()->UpdateCurrentViewer();
     }
 
-    /// Toggles the detected entity in the current selection.
+    /// 감지된 엔티티를 현재 선택에서 토글한다.
     void ShiftSelect()
     {
       if (myContext().IsNull()) return;
@@ -262,7 +262,7 @@ namespace OcctProxy
       myContext()->UpdateCurrentViewer();
     }
 
-    /// Saves a screenshot (png/bmp/jpg by extension).
+    /// 스크린샷을 저장한다 (확장자에 따라 png/bmp/jpg).
     bool Dump(System::String^ path)
     {
       if (myView().IsNull()) return false;

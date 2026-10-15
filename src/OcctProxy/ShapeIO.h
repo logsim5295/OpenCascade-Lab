@@ -1,4 +1,4 @@
-// ShapeIO.h - STEP / IGES / BREP / STL import and export.
+﻿// ShapeIO.h - STEP / IGES / BREP / STL 가져오기 및 내보내기.
 #pragma once
 
 #include "Common.h"
@@ -17,13 +17,13 @@
 
 namespace OcctProxy
 {
-  /// File import / export helpers. Paths may contain non-ASCII characters.
+  /// 파일 가져오기 / 내보내기 헬퍼. 경로에 비ASCII 문자가 포함되어도 된다.
   public ref class ShapeIO abstract sealed
   {
   public:
     // ---- STEP --------------------------------------------------------------
 
-    /// Writes the shape as STEP AP214 (schema can be "AP203", "AP214" or "AP242").
+    /// 형상을 STEP으로 저장한다 (schema는 "AP203", "AP214", "AP242" 중 하나).
     static void ExportStep(OcctShape^ shape, System::String^ path, System::String^ schema)
     {
       CheckArg(shape);
@@ -49,7 +49,7 @@ namespace OcctProxy
       ExportStep(shape, path, "AP214");
     }
 
-    /// Reads a STEP file; all root entities are merged into one shape (compound if several).
+    /// STEP 파일을 읽는다. 모든 루트 엔티티를 하나의 형상으로 합친다 (여러 개면 컴파운드).
     static OcctShape^ ImportStep(System::String^ path)
     {
       OCCT_TRY
@@ -74,7 +74,7 @@ namespace OcctProxy
     {
       CheckArg(shape);
       OCCT_TRY
-        IGESControl_Writer aWriter("MM", 0 /* faces mode */);
+        IGESControl_Writer aWriter("MM", 0 /* 면 모드 */);
         if (!aWriter.AddShape(shape->Native()))
         {
           throw gcnew OcctException("IGES transfer failed");
@@ -105,7 +105,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    // ---- BREP (OCCT native) ------------------------------------------------
+    // ---- BREP (OCCT 고유 형식) ---------------------------------------------
 
     static void ExportBrep(OcctShape^ shape, System::String^ path)
     {
@@ -131,9 +131,9 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    // ---- STL (mesh export) -------------------------------------------------
+    // ---- STL (메시 내보내기) -----------------------------------------------
 
-    /// Triangulates the shape (linear deflection in model units) and writes an STL file.
+    /// 형상을 삼각 분할(선형 편차는 모델 단위)한 뒤 STL 파일로 저장한다.
     static void ExportStl(OcctShape^ shape, System::String^ path, double linearDeflection, bool ascii)
     {
       CheckArg(shape);

@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OcctLab.Runtime\OcctLab.Runtime.csproj" />
-    <!-- C++/CLI bridge: built by MSBuild.exe (Visual Studio), not by `dotnet build` -->
+    <!-- C++/CLI 브리지: `dotnet build`가 아니라 MSBuild.exe(Visual Studio)로 빌드된다 -->
     <ProjectReference Include="..\OcctProxy\OcctProxy.vcxproj" />
   </ItemGroup>
 

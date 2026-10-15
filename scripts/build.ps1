@@ -1,13 +1,13 @@
-<#
+﻿<#
 .SYNOPSIS
-  Builds OpenCascade-Lab.sln (x64) with the MSBuild that ships with Visual Studio.
+  Visual Studio에 포함된 MSBuild로 OpenCascade-Lab.sln(x64)을 빌드한다.
 
 .DESCRIPTION
-  `dotnet build` cannot compile the C++/CLI project (OcctProxy.vcxproj), so this script
-  locates MSBuild.exe through vswhere and builds the whole solution with it.
+  `dotnet build`는 C++/CLI 프로젝트(OcctProxy.vcxproj)를 컴파일하지 못하므로,
+  이 스크립트는 vswhere로 MSBuild.exe를 찾아 솔루션 전체를 빌드한다.
 
 .PARAMETER Configuration
-  Debug or Release (default). Debug requires the "with-debug" OCCT package (bind/ + libd/).
+  Debug 또는 Release(기본값). Debug는 "with-debug" OCCT 패키지(bind/ + libd/)가 필요하다.
 
 .EXAMPLE
   .\scripts\build.ps1
@@ -31,7 +31,7 @@ if (-not (Test-Path (Join-Path $RepoRoot 'third_party\occt\inc\Standard_Version.
 $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
 if (-not (Test-Path $vswhere)) { throw 'vswhere.exe not found - is Visual Studio installed?' }
 
-# Need: MSBuild + C++ toolset + C++/CLI support
+# 필요: MSBuild + C++ 툴셋 + C++/CLI 지원
 $msbuild = & $vswhere -latest -products * `
     -requires Microsoft.Component.MSBuild Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
     -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1

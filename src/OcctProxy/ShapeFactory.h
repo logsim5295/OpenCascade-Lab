@@ -1,4 +1,4 @@
-// ShapeFactory.h - primitives, booleans, fillets and transformations.
+﻿// ShapeFactory.h - 기본 도형, 불리언, 필렛, 변환.
 #pragma once
 
 #include "Common.h"
@@ -30,9 +30,9 @@
 
 namespace OcctProxy
 {
-  // Pure native helpers. BRepFilletAPI_* objects carry over-aligned members, and a
-  // function holding such a local is compiled as native under /clr - which is only
-  // allowed when the function has no managed types in its signature or body.
+  // 순수 네이티브 헬퍼. BRepFilletAPI_* 객체는 과정렬(over-aligned) 멤버를 가지므로,
+  // 그런 지역 변수를 갖는 함수는 /clr 아래에서 네이티브로 컴파일된다. 이는 함수의
+  // 시그니처와 본문에 관리 타입이 전혀 없을 때만 허용된다.
   namespace Native
   {
     inline TopoDS_Shape FilletAllEdges(const TopoDS_Shape& theShape, double theRadius, bool& theIsDone)
@@ -60,14 +60,14 @@ namespace OcctProxy
     }
   }
 
-  /// Static factory exposing the most common OCCT modelling algorithms to .NET.
-  /// Lengths are in model units (mm by convention), angles in degrees.
+  /// 가장 흔히 쓰는 OCCT 모델링 알고리즘을 .NET에 노출하는 정적 팩토리.
+  /// 길이는 모델 단위(관례상 mm), 각도는 도(degree) 단위.
   public ref class ShapeFactory abstract sealed
   {
   public:
-    // ---- primitives --------------------------------------------------------
+    // ---- 기본 도형 ---------------------------------------------------------
 
-    /// Box with one corner at the origin, extending along +X/+Y/+Z.
+    /// 한 모서리가 원점에 있고 +X/+Y/+Z 방향으로 뻗는 박스.
     static OcctShape^ MakeBox(double dx, double dy, double dz)
     {
       OCCT_TRY
@@ -75,7 +75,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Box with one corner at (x, y, z).
+    /// 한 모서리가 (x, y, z)에 있는 박스.
     static OcctShape^ MakeBox(double x, double y, double z, double dx, double dy, double dz)
     {
       OCCT_TRY
@@ -83,7 +83,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Cylinder along +Z with its base centred at the origin.
+    /// 밑면 중심이 원점에 있고 +Z 방향으로 세워진 원기둥.
     static OcctShape^ MakeCylinder(double radius, double height)
     {
       OCCT_TRY
@@ -91,7 +91,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Cylinder whose base centre is (x, y, z) and whose axis is (dirX, dirY, dirZ).
+    /// 밑면 중심이 (x, y, z)이고 축 방향이 (dirX, dirY, dirZ)인 원기둥.
     static OcctShape^ MakeCylinder(double x, double y, double z,
                                    double dirX, double dirY, double dirZ,
                                    double radius, double height)
@@ -116,7 +116,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Cone along +Z: radius1 at the base, radius2 at the top (0 for a sharp tip).
+    /// +Z 방향 원뿔: 밑면 반지름 radius1, 윗면 반지름 radius2 (0이면 뾰족한 꼭짓점).
     static OcctShape^ MakeCone(double radius1, double radius2, double height)
     {
       OCCT_TRY
@@ -124,7 +124,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Torus around +Z: majorRadius from centre to tube centre, minorRadius of the tube.
+    /// +Z 축을 도는 토러스: majorRadius는 중심에서 튜브 중심까지 거리, minorRadius는 튜브 반지름.
     static OcctShape^ MakeTorus(double majorRadius, double minorRadius)
     {
       OCCT_TRY
@@ -132,7 +132,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    // ---- booleans ----------------------------------------------------------
+    // ---- 불리언 연산 -------------------------------------------------------
 
     static OcctShape^ Fuse(OcctShape^ a, OcctShape^ b)
     {
@@ -143,7 +143,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Returns a minus b.
+    /// a에서 b를 뺀 결과를 반환.
     static OcctShape^ Cut(OcctShape^ a, OcctShape^ b)
     {
       CheckArgs(a, b);
@@ -162,9 +162,9 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    // ---- local operations --------------------------------------------------
+    // ---- 국부 연산 ---------------------------------------------------------
 
-    /// Fillets every edge of the shape with a constant radius.
+    /// 형상의 모든 엣지에 일정한 반지름으로 필렛을 적용한다.
     static OcctShape^ FilletAllEdges(OcctShape^ shape, double radius)
     {
       CheckArg(shape);
@@ -179,7 +179,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Chamfers every edge of the shape with a constant distance.
+    /// 형상의 모든 엣지에 일정한 거리로 챔퍼를 적용한다.
     static OcctShape^ ChamferAllEdges(OcctShape^ shape, double distance)
     {
       CheckArg(shape);
@@ -194,7 +194,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    // ---- transformations ---------------------------------------------------
+    // ---- 변환 --------------------------------------------------------------
 
     static OcctShape^ Translate(OcctShape^ shape, double dx, double dy, double dz)
     {
@@ -206,7 +206,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Rotates around the axis through (px, py, pz) with direction (dx, dy, dz).
+    /// (px, py, pz)를 지나고 방향이 (dx, dy, dz)인 축을 중심으로 회전한다.
     static OcctShape^ Rotate(OcctShape^ shape,
                              double px, double py, double pz,
                              double dx, double dy, double dz,
@@ -221,7 +221,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Uniform scale about the origin.
+    /// 원점을 기준으로 균일하게 크기를 조절한다.
     static OcctShape^ Scale(OcctShape^ shape, double factor)
     {
       CheckArg(shape);
@@ -232,7 +232,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Groups several shapes into one compound (no boolean operation is performed).
+    /// 여러 형상을 하나의 컴파운드로 묶는다 (불리언 연산은 수행하지 않음).
     static OcctShape^ MakeCompound(System::Collections::Generic::IEnumerable<OcctShape^>^ shapes)
     {
       if (shapes == nullptr) throw gcnew System::ArgumentNullException("shapes");

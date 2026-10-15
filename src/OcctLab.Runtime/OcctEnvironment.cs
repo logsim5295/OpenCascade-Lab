@@ -3,7 +3,7 @@ using System.Reflection;
 namespace OcctLab.Runtime;
 
 /// <summary>
-/// Thrown when the native OCCT binaries cannot be located.
+/// 네이티브 OCCT 바이너리를 찾지 못했을 때 던져진다.
 /// </summary>
 public sealed class OcctNotFoundException : Exception
 {
@@ -11,25 +11,25 @@ public sealed class OcctNotFoundException : Exception
 }
 
 /// <summary>
-/// Makes the native OCCT DLLs (TKernel.dll, TKOpenGl.dll, freetype.dll, ...) loadable by the
-/// current process by prepending their folders to PATH.
+/// 네이티브 OCCT DLL(TKernel.dll, TKOpenGl.dll, freetype.dll, ...)이 있는 폴더를 PATH 앞에
+/// 추가하여 현재 프로세스에서 로드할 수 있게 한다.
 ///
-/// IMPORTANT: call <see cref="Initialize"/> before the JIT touches any type from OcctProxy.dll.
-/// Loading OcctProxy.dll triggers the Windows loader to resolve its native imports, so keep
-/// the call in a method that itself does not reference OcctProxy types (e.g. Program.Main).
+/// 중요: JIT가 OcctProxy.dll의 타입을 건드리기 전에 <see cref="Initialize"/>를 호출해야 한다.
+/// OcctProxy.dll이 로드되면 Windows 로더가 네이티브 임포트를 해석하므로, 이 호출은
+/// OcctProxy 타입을 직접 참조하지 않는 메서드(예: Program.Main) 안에 두어야 한다.
 /// </summary>
 public static class OcctEnvironment
 {
     private static readonly object Gate = new();
     private static bool _initialized;
 
-    /// <summary>Folders that were prepended to PATH (first one contains TKernel.dll).</summary>
+    /// <summary>PATH 앞에 추가된 폴더 목록 (첫 번째 폴더에 TKernel.dll이 있다).</summary>
     public static IReadOnlyList<string> RuntimeDirectories { get; private set; } = Array.Empty<string>();
 
-    /// <summary>Root of the OCCT package (folder containing inc/ and win64/).</summary>
+    /// <summary>OCCT 패키지 루트 (inc/와 win64/를 포함하는 폴더).</summary>
     public static string? OcctRoot { get; private set; }
 
-    /// <summary>"Debug" or "Release": which OCCT binaries (bind/ or bin/) this build was linked against.</summary>
+    /// <summary>"Debug" 또는 "Release": 이 빌드가 링크된 OCCT 바이너리(bind/ 또는 bin/) 구분.</summary>
     public static string Configuration { get; private set; } = "Release";
 
     public static void Initialize()
@@ -76,7 +76,7 @@ public static class OcctEnvironment
         var candidates = new List<string>();
         var binFolder = string.Equals(Configuration, "Debug", StringComparison.OrdinalIgnoreCase) ? "bind" : "bin";
 
-        // 1) Explicit user override.
+        // 1) 사용자가 환경 변수로 명시적으로 지정한 경로.
         var envRoot = Environment.GetEnvironmentVariable("OCCT_ROOT");
         if (!string.IsNullOrWhiteSpace(envRoot))
         {
@@ -88,13 +88,13 @@ public static class OcctEnvironment
             candidates.AddRange(Split(envDirs));
         }
 
-        // 2) Build-time values from Directory.Build.props.
+        // 2) Directory.Build.props에서 빌드 시점에 구워 넣은 값.
         if (meta.TryGetValue("OcctRuntimeDirs", out var baked))
         {
             candidates.AddRange(Split(baked));
         }
 
-        // 3) Fallback: walk up from the exe looking for third_party/occt (useful after moving the repo).
+        // 3) 폴백: exe 위치에서 상위로 올라가며 third_party/occt를 찾는다 (저장소를 옮긴 뒤에 유용).
         for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent)
         {
             var probe = Path.Combine(dir.FullName, "third_party", "occt", "win64", "vc14", binFolder);

@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 using OcctProxy;
-// WPF (System.Windows.*) usings are global in this project; pin the WinForms/GDI types we mean.
+// 이 프로젝트에서 WPF(System.Windows.*) using은 전역이므로, 여기서 쓰려는 WinForms/GDI 타입을 명시적으로 고정한다.
 using Color = System.Drawing.Color;
 using Control = System.Windows.Forms.Control;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
@@ -9,8 +9,8 @@ using Point = System.Drawing.Point;
 namespace OcctLab.Viewer;
 
 /// <summary>
-/// WinForms control that owns an <see cref="OcctViewer"/> (OpenGL view on this control's HWND).
-/// Mouse: left-drag = rotate, middle/right-drag = pan, wheel = zoom, click = select, Shift+click = multi-select.
+/// <see cref="OcctViewer"/>를 소유하는 WinForms 컨트롤 (이 컨트롤의 HWND 위에 OpenGL 뷰가 그려진다).
+/// 마우스: 왼쪽 드래그 = 회전, 가운데/오른쪽 드래그 = 이동, 휠 = 줌, 클릭 = 선택, Shift+클릭 = 다중 선택.
 /// </summary>
 public sealed class OcctViewControl : Control
 {
@@ -43,7 +43,7 @@ public sealed class OcctViewControl : Control
 
     protected override void OnPaintBackground(PaintEventArgs pevent)
     {
-        // OCCT draws the whole client area.
+        // 클라이언트 영역 전체를 OCCT가 그린다.
     }
 
     protected override void OnPaint(PaintEventArgs e) => Viewer.Redraw();

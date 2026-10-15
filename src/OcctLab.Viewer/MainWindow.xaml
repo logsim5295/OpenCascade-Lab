@@ -32,6 +32,12 @@
                 <Button Content="Color Selected" Click="OnColorSelected"/>
                 <Button Content="Delete Selected" Click="OnDeleteSelected"/>
                 <Button Content="Clear" Click="OnClear"/>
+                <Button Name="btnMovePlusX" Content="X축 + 이동" Click="OnMoveSelected"/>
+                <Button Name="btnMovePlusY" Content="Y축 + 이동" Click="OnMoveSelected"/>
+                <Button Name="btnMovePlusZ" Content="Z축 + 이동" Click="OnMoveSelected"/>
+                <Button Name="btnMoveMinusX" Content="X축 - 이동" Click="OnMoveSelected"/>
+                <Button Name="btnMoveMinusY" Content="Y축 - 이동" Click="OnMoveSelected"/>
+                <Button Name="btnMoveMinusZ" Content="Z축 - 이동" Click="OnMoveSelected"/>
             </ToolBar>
         </ToolBarTray>
 
@@ -44,7 +50,7 @@
             </StatusBarItem>
         </StatusBar>
 
-        <!-- WinForms host: OCCT renders with OpenGL directly into the child control's HWND -->
+        <!-- WinForms 호스트: OCCT가 자식 컨트롤의 HWND에 OpenGL로 직접 렌더링한다 -->
         <wf:WindowsFormsHost x:Name="ViewHost"/>
     </DockPanel>
 </Window>

@@ -5,8 +5,8 @@ namespace OcctLab.Viewer;
 
 public partial class App : Application
 {
-    // Runs before the WPF-generated Main(): puts the OCCT DLL folders on PATH
-    // before any OcctProxy type gets loaded by MainWindow.
+    // WPF가 생성한 Main()보다 먼저 실행된다: MainWindow가 OcctProxy 타입을 로드하기 전에
+    // OCCT DLL 폴더를 PATH에 넣는다.
     static App()
     {
         try

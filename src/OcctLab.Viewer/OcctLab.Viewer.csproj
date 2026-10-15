@@ -5,14 +5,14 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>OcctLab.Viewer</RootNamespace>
     <AssemblyName>OcctLab.Viewer</AssemblyName>
-    <!-- WPF window hosting a WinForms control: OCCT's OpenGL view needs a real HWND -->
+    <!-- WinForms 컨트롤을 호스팅하는 WPF 창: OCCT의 OpenGL 뷰에는 실제 HWND가 필요하다 -->
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- WPF + WinForms both add implicit usings; keep the WPF ones global and import WinForms explicitly -->
+    <!-- WPF와 WinForms 모두 암시적 using을 추가하므로, WPF 것만 전역으로 두고 WinForms는 명시적으로 import한다 -->
     <Using Remove="System.Windows.Forms" />
   </ItemGroup>
 

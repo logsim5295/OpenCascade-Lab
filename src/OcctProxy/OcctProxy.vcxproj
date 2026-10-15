@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  OcctProxy : C++/CLI bridge between OCCT (native C++) and .NET (C#).
-  - Compiled with /clr:netcore, targets net8.0, x64 only.
-  - Include / lib paths come from Directory.Build.props (OcctIncDir, OcctLibDir).
+  OcctProxy : OCCT(네이티브 C++)와 .NET(C#) 사이의 C++/CLI 브리지.
+  - /clr:netcore로 컴파일, net8.0 대상, x64 전용.
+  - include / lib 경로는 Directory.Build.props(OcctIncDir, OcctLibDir)에서 가져온다.
 -->
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
@@ -32,7 +32,7 @@
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <!-- Use the toolset of whichever Visual Studio / MSBuild is building (v145 for VS 2026, v143 for VS 2022) -->
+    <!-- 빌드하는 Visual Studio / MSBuild의 툴셋을 그대로 사용한다 (VS 2026은 v145, VS 2022는 v143) -->
     <PlatformToolset Condition="'$(PlatformToolset)' == ''">$(DefaultPlatformToolset)</PlatformToolset>
     <UseDebugLibraries Condition="'$(Configuration)' == 'Debug'">true</UseDebugLibraries>
     <UseDebugLibraries Condition="'$(Configuration)' != 'Debug'">false</UseDebugLibraries>
@@ -57,7 +57,7 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)' == 'Debug'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)' != 'Debug'">NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <!-- OCCT headers trigger a few benign warnings under /clr -->
+      <!-- OCCT 헤더는 /clr 아래에서 무해한 경고를 몇 개 발생시킨다 -->
       <DisableSpecificWarnings>4538;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -73,7 +73,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OcctLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <!-- OCCT toolkits used by the proxy (OCCT 7.8+/8.x naming: TKDESTEP, TKDESTL, TKDEIGES) -->
+      <!-- 프록시가 사용하는 OCCT 툴킷 (OCCT 7.8+/8.x 명명 규칙: TKDESTEP, TKDESTL, TKDEIGES) -->
       <AdditionalDependencies>
         TKernel.lib;TKMath.lib;TKG2d.lib;TKG3d.lib;TKGeomBase.lib;TKBRep.lib;
         TKGeomAlgo.lib;TKTopAlgo.lib;TKPrim.lib;TKBO.lib;TKBool.lib;TKShHealing.lib;TKFillet.lib;TKMesh.lib;

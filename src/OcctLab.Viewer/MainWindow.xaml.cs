@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Win32;
 using OcctProxy;
 
@@ -23,7 +24,7 @@ public partial class MainWindow : Window
         Loaded += (_, _) => OnDemo(this, new RoutedEventArgs());
     }
 
-    // ---- model ---------------------------------------------------------------
+    // ---- 모델 ----------------------------------------------------------------
 
     private void OnBox(object sender, RoutedEventArgs e) =>
         Run(() => Add(ShapeFactory.MakeBox(100, 60, 40), "Box"));
@@ -55,7 +56,7 @@ public partial class MainWindow : Window
         Status($"{label}: {shape}  volume={shape.Volume.ToString("F2", CultureInfo.InvariantCulture)}");
     }
 
-    // ---- file ----------------------------------------------------------------
+    // ---- 파일 ----------------------------------------------------------------
 
     private void OnImport(object sender, RoutedEventArgs e) => Run(() =>
     {
@@ -93,7 +94,7 @@ public partial class MainWindow : Window
         Status(Viewer.Dump(dlg.FileName) ? $"Saved {dlg.FileName}" : "Screenshot failed");
     });
 
-    // ---- view ----------------------------------------------------------------
+    // ---- 보기 ----------------------------------------------------------------
 
     private void OnFitAll(object sender, RoutedEventArgs e) => Viewer.FitAll();
     private void OnWireframe(object sender, RoutedEventArgs e) => Viewer.SetDisplayMode(DisplayMode.Wireframe);
@@ -103,15 +104,15 @@ public partial class MainWindow : Window
     private void OnTop(object sender, RoutedEventArgs e) => Viewer.SetOrientation(ViewOrientation.Top);
     private void OnRight(object sender, RoutedEventArgs e) => Viewer.SetOrientation(ViewOrientation.Right);
 
-    // ---- edit ----------------------------------------------------------------
+    // ---- 편집 ----------------------------------------------------------------
 
     private void OnColorSelected(object sender, RoutedEventArgs e) =>
         Viewer.SetSelectedColor(_random.NextDouble(), _random.NextDouble(), _random.NextDouble());
 
     private void OnDeleteSelected(object sender, RoutedEventArgs e)
     {
-        // The viewer only knows AIS objects; the OcctShape list is kept for export and is
-        // intentionally left untouched here (a real app would map AIS objects back to shapes).
+        // 뷰어는 AIS 객체만 알고 있다. OcctShape 목록은 내보내기용으로 유지되며 여기서는
+        // 의도적으로 건드리지 않는다 (실제 앱이라면 AIS 객체를 형상에 다시 매핑해야 한다).
         Viewer.RemoveSelected();
         Status("Removed selected object(s) from the view");
     }
@@ -124,7 +125,31 @@ public partial class MainWindow : Window
         Status("Cleared");
     }
 
-    // ---- helpers -------------------------------------------------------------
+    private void OnMoveSelected(object sender, RoutedEventArgs e)
+    {
+        Button? button = sender as Button;
+        if (button == null) return;
+
+        switch (button.Name)
+        {
+            case "btnMovePlusX":
+                break;
+            case "btnMovePlusY":
+                break;
+            case "btnMovePlusZ":
+                break;
+            case "btnMoveMinusX":
+                break;
+            case "btnMoveMinusY":
+                break;
+            case "btnMoveMinusZ":
+                break;
+            default:
+                break;
+        }
+    }
+
+    // ---- 헬퍼 ----------------------------------------------------------------
 
     private void Run(Action action)
     {

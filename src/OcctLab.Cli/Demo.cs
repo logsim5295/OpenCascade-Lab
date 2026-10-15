@@ -5,33 +5,33 @@ using OcctProxy;
 namespace OcctLab.Cli;
 
 /// <summary>
-/// Headless modelling walkthrough: primitives -> boolean -> fillet -> measure -> export -> re-import.
-/// Everything here is plain C#; the OCCT calls go through the C++/CLI OcctProxy assembly.
+/// 헤드리스 모델링 시연: 기본 도형 -> 불리언 -> 필렛 -> 측정 -> 내보내기 -> 다시 가져오기.
+/// 여기 코드는 모두 순수 C#이며, OCCT 호출은 C++/CLI OcctProxy 어셈블리를 거친다.
 /// </summary>
 internal static class Demo
 {
     public static void Run(string outputDir)
     {
         var inv = CultureInfo.InvariantCulture;
-        OcctInfo.SetConsoleOutput(false);   // silence OCCT's STEP transfer statistics on stdout
+        OcctInfo.SetConsoleOutput(false);   // OCCT가 stdout에 찍는 STEP 변환 통계를 끈다
         Console.WriteLine($"OCCT version      : {OcctInfo.Version}");
         Console.WriteLine($"OCCT binaries     : {OcctEnvironment.RuntimeDirectories[0]}  ({OcctEnvironment.Configuration})");
         Console.WriteLine();
 
-        // 1. Primitives -------------------------------------------------------
+        // 1. 기본 도형 --------------------------------------------------------
         using var box = ShapeFactory.MakeBox(100, 60, 40);
         using var hole = ShapeFactory.MakeCylinder(50, 30, -5, 0, 0, 1, radius: 15, height: 50);
         Console.WriteLine($"Box               : {box}");
         Console.WriteLine($"Cylinder          : {hole}");
 
-        // 2. Boolean + fillet -------------------------------------------------
+        // 2. 불리언 + 필렛 ---------------------------------------------------
         using var plate = ShapeFactory.Cut(box, hole);
         using var rounded = ShapeFactory.FilletAllEdges(plate, 3.0);
         Console.WriteLine($"Box - Cylinder    : {plate}");
         Console.WriteLine($"Filleted (r=3)    : {rounded}");
         Console.WriteLine();
 
-        // 3. Measurements -----------------------------------------------------
+        // 3. 측정 -------------------------------------------------------------
         var bbox = rounded.GetBoundingBox();
         var com = rounded.CenterOfMass();
         Console.WriteLine($"Valid (BRepCheck) : {rounded.IsValid()}");
@@ -41,7 +41,7 @@ internal static class Demo
         Console.WriteLine($"Center of mass    : ({com[0].ToString("F3", inv)}, {com[1].ToString("F3", inv)}, {com[2].ToString("F3", inv)})");
         Console.WriteLine();
 
-        // 4. Export -----------------------------------------------------------
+        // 4. 내보내기 ---------------------------------------------------------
         Directory.CreateDirectory(outputDir);
         var stepPath = Path.Combine(outputDir, "plate.step");
         var brepPath = Path.Combine(outputDir, "plate.brep");
@@ -55,13 +55,13 @@ internal static class Demo
         }
         Console.WriteLine();
 
-        // 5. Round-trip check -------------------------------------------------
+        // 5. 왕복 검증 (내보낸 STEP 다시 읽기) -------------------------------
         using var reloaded = ShapeIO.ImportStep(stepPath);
         var delta = Math.Abs(reloaded.Volume - rounded.Volume);
         Console.WriteLine($"Re-imported STEP  : {reloaded}");
         Console.WriteLine($"Volume difference : {delta.ToString("E2", inv)}  -> {(delta < 1e-3 ? "OK" : "MISMATCH")}");
 
-        // 6. Error handling: OCCT failures surface as OcctException ---------
+        // 6. 오류 처리: OCCT 실패는 OcctException으로 드러난다 ---------------
         try
         {
             ShapeFactory.FilletAllEdges(box, 1000.0);

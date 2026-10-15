@@ -1,4 +1,4 @@
-// OcctShape.h - managed wrapper around TopoDS_Shape.
+﻿// OcctShape.h - TopoDS_Shape를 감싸는 관리 래퍼.
 #pragma once
 
 #include "Common.h"
@@ -17,7 +17,7 @@
 
 namespace OcctProxy
 {
-  /// Axis-aligned bounding box in model coordinates.
+  /// 모델 좌표계 기준의 축 정렬 바운딩 박스.
   public value struct BoundingBox
   {
     double XMin, YMin, ZMin, XMax, YMax, ZMax;
@@ -33,7 +33,7 @@ namespace OcctProxy
     }
   };
 
-  /// Topological shape type (mirrors TopAbs_ShapeEnum).
+  /// 위상 형상 타입 (TopAbs_ShapeEnum과 1:1 대응).
   public enum class ShapeType
   {
     Compound  = TopAbs_COMPOUND,
@@ -47,15 +47,15 @@ namespace OcctProxy
     Shape     = TopAbs_SHAPE
   };
 
-  /// Managed handle to a native TopoDS_Shape. Owns a heap copy of the shape
-  /// (TopoDS_Shape itself is a cheap reference-counted handle, so copying is inexpensive).
+  /// 네이티브 TopoDS_Shape에 대한 관리 핸들. 형상의 힙 복사본을 소유한다
+  /// (TopoDS_Shape 자체가 가벼운 참조 카운팅 핸들이므로 복사 비용은 작다).
   public ref class OcctShape
   {
   internal:
     OcctShape(const TopoDS_Shape& theShape)
       : myShape(new TopoDS_Shape(theShape)) {}
 
-    /// Native access for the other proxy classes.
+    /// 다른 프록시 클래스에서 네이티브 형상에 접근할 때 사용.
     const TopoDS_Shape& Native() { return *myShape; }
 
   public:
@@ -83,7 +83,7 @@ namespace OcctProxy
     property int NbEdges    { int get() { return Count(TopAbs_EDGE); } }
     property int NbVertices { int get() { return Count(TopAbs_VERTEX); } }
 
-    /// Volume of all solids in the shape (model units^3).
+    /// 형상에 포함된 모든 솔리드의 부피 (모델 단위^3).
     property double Volume
     {
       double get()
@@ -97,7 +97,7 @@ namespace OcctProxy
       }
     }
 
-    /// Total surface area of all faces (model units^2).
+    /// 모든 면의 총 표면적 (모델 단위^2).
     property double SurfaceArea
     {
       double get()
@@ -111,7 +111,7 @@ namespace OcctProxy
       }
     }
 
-    /// Volume-weighted centre of mass as (x, y, z).
+    /// 부피 가중 질량 중심을 (x, y, z)로 반환.
     array<double>^ CenterOfMass()
     {
       array<double>^ aResult = gcnew array<double>(3);
@@ -142,7 +142,7 @@ namespace OcctProxy
       OCCT_CATCH
     }
 
-    /// Runs BRepCheck_Analyzer (topological / geometric validity check).
+    /// BRepCheck_Analyzer 실행 (위상 / 기하 유효성 검사).
     bool IsValid()
     {
       if (IsNull) return false;

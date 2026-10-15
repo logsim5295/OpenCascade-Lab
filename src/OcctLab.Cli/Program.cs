@@ -7,7 +7,7 @@ internal static class Program
 {
     private static int Main(string[] args)
     {
-        // Must run before any OcctProxy type is JIT-compiled (see OcctEnvironment docs).
+        // OcctProxy 타입이 JIT 컴파일되기 전에 반드시 실행해야 한다 (OcctEnvironment 주석 참고).
         try
         {
             OcctEnvironment.Initialize();

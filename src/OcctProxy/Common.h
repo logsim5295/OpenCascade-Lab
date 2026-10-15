@@ -1,4 +1,4 @@
-// Common.h - helpers shared by the C++/CLI proxy classes.
+﻿// Common.h - C++/CLI 프록시 클래스들이 공유하는 헬퍼 모음.
 #pragma once
 
 #include <Standard_Failure.hxx>
@@ -14,24 +14,24 @@
 
 namespace OcctProxy
 {
-  /// Exception thrown to .NET callers whenever an OCCT algorithm fails.
+  /// OCCT 알고리즘이 실패할 때 .NET 호출자에게 던져지는 예외.
   public ref class OcctException : public System::Exception
   {
   public:
     OcctException(System::String^ message) : System::Exception(message) {}
   };
 
-  /// Static information about / global settings of the native OCCT library.
+  /// 네이티브 OCCT 라이브러리의 정적 정보 및 전역 설정.
   public ref class OcctInfo abstract sealed
   {
   public:
-    /// OCCT version string compiled into the proxy, e.g. "8.0.1".
+    /// 프록시에 컴파일된 OCCT 버전 문자열 (예: "8.0.1").
     static property System::String^ Version
     {
       System::String^ get() { return gcnew System::String(OCC_VERSION_COMPLETE); }
     }
 
-    /// Enables / disables OCCT's own console output (e.g. STEP transfer statistics on stdout).
+    /// OCCT 자체 콘솔 출력(예: stdout으로 나오는 STEP 변환 통계)을 켜거나 끈다.
     static void SetConsoleOutput(bool enabled)
     {
       const Handle(Message_Messenger)& aMessenger = Message::DefaultMessenger();
@@ -43,9 +43,9 @@ namespace OcctProxy
     }
   };
 
-  // ---- string conversion ---------------------------------------------------
+  // ---- 문자열 변환 -----------------------------------------------------------
 
-  /// System.String (UTF-16) -> TCollection_AsciiString (UTF-8).
+  /// System.String (UTF-16) -> TCollection_AsciiString (UTF-8) 변환.
   inline TCollection_AsciiString ToAscii(System::String^ theString)
   {
     if (theString == nullptr || theString->Length == 0)
@@ -56,10 +56,10 @@ namespace OcctProxy
     return TCollection_AsciiString(static_cast<const wchar_t*>(aPinned));
   }
 
-  /// TCollection_AsciiString (UTF-8) -> System.String.
+  /// TCollection_AsciiString (UTF-8) -> System.String 변환.
   inline System::String^ ToManaged(const TCollection_AsciiString& theString)
   {
-    TCollection_ExtendedString anExt(theString, true); // UTF-8 -> UTF-16
+    TCollection_ExtendedString anExt(theString, true); // UTF-8 -> UTF-16 변환
     return gcnew System::String(anExt.ToWideString());
   }
 
@@ -69,7 +69,7 @@ namespace OcctProxy
   }
 }
 
-// Wrap OCCT calls: native exceptions become managed OcctException.
+// OCCT 호출 래핑: 네이티브 예외를 관리 코드의 OcctException으로 변환한다.
 #define OCCT_TRY try {
 #define OCCT_CATCH                                                                   \
   }                                                                                  \
