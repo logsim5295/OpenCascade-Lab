@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +22,17 @@ public partial class MainWindow : Window
         _view.SelectionChanged += (_, _) => Status($"Selected: {Viewer.SelectedCount}");
         VersionText.Text = $"OCCT {OcctInfo.Version}";
         Loaded += (_, _) => OnDemo(this, new RoutedEventArgs());
+    }
+
+    /// 창이 닫히면 UI 스레드에서 OpenGL 뷰와 형상을 결정적으로 해제한다.
+    /// (GC Finalizer에 맡기면 다른 스레드에서, 그리고 보장되지 않는 순서로 정리된다.)
+    protected override void OnClosed(EventArgs e)
+    {
+        ViewHost.Child = null;
+        _view.Dispose();
+        foreach (var s in _shapes) s.Dispose();
+        _shapes.Clear();
+        base.OnClosed(e);
     }
 
     // ---- 모델 ----------------------------------------------------------------
