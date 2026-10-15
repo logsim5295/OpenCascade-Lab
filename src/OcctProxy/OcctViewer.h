@@ -20,6 +20,9 @@
 #include <AIS_SelectionScheme.hxx>
 #include <AIS_Shape.hxx>
 #include <Quantity_Color.hxx>
+#include <gp_Trsf.hxx>
+#include <gp_Vec.hxx>
+#include <TopLoc_Location.hxx>
 
 namespace OcctProxy
 {
@@ -280,6 +283,34 @@ namespace OcctProxy
         myContext()->Remove(anIt.Value(), false);
       }
       myContext()->UpdateCurrentViewer();
+    }
+
+    /// 선택된 모든 객체를 월드 좌표계 기준으로 (dx, dy, dz)만큼 이동한다.
+    /// AIS 객체의 로컬 변환(LocalTransformation)만 바뀌며 원본 TopoDS_Shape는 그대로다.
+    void TranslateSelected(double dx, double dy, double dz)
+    {
+      if (!HasContext()) return;
+      OCCT_TRY
+        gp_Trsf aDelta;
+        aDelta.SetTranslation(gp_Vec(dx, dy, dz));
+
+        // 선택 목록을 먼저 복사한다 (RemoveSelected와 같은 패턴).
+        NCollection_List<Handle(AIS_InteractiveObject)> aList;
+        for (myContext()->InitSelected(); myContext()->MoreSelected(); myContext()->NextSelected())
+        {
+          aList.Append(myContext()->SelectedInteractive());
+        }
+
+        for (NCollection_List<Handle(AIS_InteractiveObject)>::Iterator anIt(aList); anIt.More(); anIt.Next())
+        {
+          const Handle(AIS_InteractiveObject)& anObj = anIt.Value();
+          // aDelta * 기존 변환: 기존 변환을 먼저 적용한 뒤 월드 축 방향으로 이동한다.
+          gp_Trsf aNew = aDelta * anObj->LocalTransformation();
+          // SetLocation은 로컬 변환 설정과 함께 선택 엔티티/동적 하이라이트도 갱신한다.
+          myContext()->SetLocation(anObj, TopLoc_Location(aNew));
+        }
+        myContext()->UpdateCurrentViewer();
+      OCCT_CATCH
     }
 
     /// 스크린샷을 저장한다 (확장자에 따라 png/bmp/jpg).

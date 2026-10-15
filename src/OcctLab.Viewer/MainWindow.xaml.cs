@@ -136,29 +136,28 @@ public partial class MainWindow : Window
         Status("Cleared");
     }
 
-    private void OnMoveSelected(object sender, RoutedEventArgs e)
-    {
-        Button? button = sender as Button;
-        if (button == null) return;
+    /// 축 이동 버튼 한 번당 이동량 (모델 단위). 데모 박스가 100 x 60 x 40이므로 10이 보기 좋다.
+    private const double MoveStep = 10.0;
 
-        switch (button.Name)
+    private void OnMoveSelected(object sender, RoutedEventArgs e) => Run(() =>
+    {
+        if (sender is not Button button) return;
+        if (Viewer.SelectedCount == 0) { Status("이동할 객체를 먼저 선택하세요"); return; }
+
+        var (dx, dy, dz) = button.Name switch
         {
-            case "btnMovePlusX":
-                break;
-            case "btnMovePlusY":
-                break;
-            case "btnMovePlusZ":
-                break;
-            case "btnMoveMinusX":
-                break;
-            case "btnMoveMinusY":
-                break;
-            case "btnMoveMinusZ":
-                break;
-            default:
-                break;
-        }
-    }
+            "btnMovePlusX"  => ( MoveStep, 0.0, 0.0),
+            "btnMovePlusY"  => (0.0,  MoveStep, 0.0),
+            "btnMovePlusZ"  => (0.0, 0.0,  MoveStep),
+            "btnMoveMinusX" => (-MoveStep, 0.0, 0.0),
+            "btnMoveMinusY" => (0.0, -MoveStep, 0.0),
+            "btnMoveMinusZ" => (0.0, 0.0, -MoveStep),
+            _ => (0.0, 0.0, 0.0)
+        };
+
+        Viewer.TranslateSelected(dx, dy, dz);
+        Status($"선택 객체 {Viewer.SelectedCount}개를 ({dx}, {dy}, {dz})만큼 이동");
+    });
 
     // ---- 헬퍼 ----------------------------------------------------------------
 
