@@ -21,7 +21,7 @@ public partial class MainWindow : Window
         ViewHost.Child = _view;
         _view.SelectionChanged += (_, _) => Status($"Selected: {Viewer.SelectedCount}");
         VersionText.Text = $"OCCT {OcctInfo.Version}";
-        Loaded += (_, _) => OnDemo(this, new RoutedEventArgs());
+        //Loaded += (_, _) => OnDemo(this, new RoutedEventArgs());
     }
 
     /// 창이 닫히면 UI 스레드에서 OpenGL 뷰와 형상을 결정적으로 해제한다.

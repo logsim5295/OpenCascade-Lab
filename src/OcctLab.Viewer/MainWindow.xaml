@@ -5,7 +5,7 @@
         Title="OCCT Lab Viewer" Width="1100" Height="750" WindowStartupLocation="CenterScreen">
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar Header="Model">
+            <ToolBar Header="Model" Band="0" BandIndex="0">
                 <Button Content="Box" Click="OnBox" ToolTip="100 x 60 x 40 box"/>
                 <Button Content="Cylinder" Click="OnCylinder"/>
                 <Button Content="Sphere" Click="OnSphere"/>
@@ -13,12 +13,12 @@
                 <Separator/>
                 <Button Content="Demo (Cut + Fillet)" Click="OnDemo" FontWeight="Bold"/>
             </ToolBar>
-            <ToolBar Header="File">
+            <ToolBar Header="File" Band="0" BandIndex="1">
                 <Button Content="Import..." Click="OnImport" ToolTip="STEP / IGES / BREP"/>
                 <Button Content="Export STEP..." Click="OnExportStep"/>
                 <Button Content="Screenshot..." Click="OnScreenshot"/>
             </ToolBar>
-            <ToolBar Header="View">
+            <ToolBar Header="View" Band="1" BandIndex="0">
                 <Button Content="Fit All" Click="OnFitAll"/>
                 <Button Content="Wireframe" Click="OnWireframe"/>
                 <Button Content="Shaded" Click="OnShaded"/>
@@ -28,7 +28,7 @@
                 <Button Content="Top" Click="OnTop"/>
                 <Button Content="Right" Click="OnRight"/>
             </ToolBar>
-            <ToolBar Header="Edit">
+            <ToolBar Header="Edit" Band="2" BandIndex="0">
                 <Button Content="Color Selected" Click="OnColorSelected"/>
                 <Button Content="Delete Selected" Click="OnDeleteSelected"/>
                 <Button Content="Clear" Click="OnClear"/>
