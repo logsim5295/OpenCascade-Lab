@@ -7,6 +7,7 @@
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar Header="Model" Band="0" BandIndex="0">
                 <Button Content="Box" Click="OnBox" ToolTip="100 x 60 x 40 box"/>
+                <Button Content="Box2" Click="OnBox2" ToolTip="한 모서리가 (x, y, z)에 있는 박스"/>
                 <Button Content="Cylinder" Click="OnCylinder"/>
                 <Button Content="Sphere" Click="OnSphere"/>
                 <Button Content="Torus" Click="OnTorus"/>

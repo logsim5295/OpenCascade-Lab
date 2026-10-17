@@ -40,6 +40,15 @@ public partial class MainWindow : Window
     private void OnBox(object sender, RoutedEventArgs e) =>
         Run(() => Add(ShapeFactory.MakeBox(100, 60, 40), "Box"));
 
+    /// <summary>
+    /// 박스 그리기
+    ///  - 한 모서리가 (100,100,100)에 위치하고, x축 방향으로 100, y축 방향으로 60, z축 방향으로 40만큼 확장된다.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnBox2(object sender, RoutedEventArgs e) =>
+        Run(() => Add(ShapeFactory.MakeBox(100, 100, 100, 100, 60, 40), "Box2"));
+
     private void OnCylinder(object sender, RoutedEventArgs e) =>
         Run(() => Add(ShapeFactory.MakeCylinder(20, 80), "Cylinder"));
 
