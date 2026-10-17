@@ -29,16 +29,26 @@
                 <Button Content="Top" Click="OnTop"/>
                 <Button Content="Right" Click="OnRight"/>
             </ToolBar>
-            <ToolBar Header="Edit" Band="2" BandIndex="0">
+            <ToolBar Header="Edit" Band="1" BandIndex="1">
                 <Button Content="Color Selected" Click="OnColorSelected"/>
                 <Button Content="Delete Selected" Click="OnDeleteSelected"/>
                 <Button Content="Clear" Click="OnClear"/>
+            </ToolBar>
+            <ToolBar Header="Move" Band="2" BandIndex="0">
                 <Button Name="btnMovePlusX" Content="X축 + 이동" Click="OnMoveSelected"/>
                 <Button Name="btnMovePlusY" Content="Y축 + 이동" Click="OnMoveSelected"/>
                 <Button Name="btnMovePlusZ" Content="Z축 + 이동" Click="OnMoveSelected"/>
                 <Button Name="btnMoveMinusX" Content="X축 - 이동" Click="OnMoveSelected"/>
                 <Button Name="btnMoveMinusY" Content="Y축 - 이동" Click="OnMoveSelected"/>
                 <Button Name="btnMoveMinusZ" Content="Z축 - 이동" Click="OnMoveSelected"/>
+            </ToolBar>
+            <ToolBar Header="Rotate" Band="2" BandIndex="1">
+                <Button Name="btnRotatePlusX" Content="X축 + 회전" Click="OnRotateSelected"/>
+                <Button Name="btnRotatePlusY" Content="Y축 + 회전" Click="OnRotateSelected"/>
+                <Button Name="btnRotatePlusZ" Content="Z축 + 회전" Click="OnRotateSelected"/>
+                <Button Name="btnRotateMinusX" Content="X축 - 회전" Click="OnRotateSelected"/>
+                <Button Name="btnRotateMinusY" Content="Y축 - 회전" Click="OnRotateSelected"/>
+                <Button Name="btnRotateMinusZ" Content="Z축 - 회전" Click="OnRotateSelected"/>
             </ToolBar>
         </ToolBarTray>
 

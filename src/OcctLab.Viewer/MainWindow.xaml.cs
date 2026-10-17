@@ -145,29 +145,6 @@ public partial class MainWindow : Window
         Status("Cleared");
     }
 
-    /// 축 이동 버튼 한 번당 이동량 (모델 단위). 데모 박스가 100 x 60 x 40이므로 10이 보기 좋다.
-    private const double MoveStep = 10.0;
-
-    private void OnMoveSelected(object sender, RoutedEventArgs e) => Run(() =>
-    {
-        if (sender is not Button button) return;
-        if (Viewer.SelectedCount == 0) { Status("이동할 객체를 먼저 선택하세요"); return; }
-
-        var (dx, dy, dz) = button.Name switch
-        {
-            "btnMovePlusX"  => ( MoveStep, 0.0, 0.0),
-            "btnMovePlusY"  => (0.0,  MoveStep, 0.0),
-            "btnMovePlusZ"  => (0.0, 0.0,  MoveStep),
-            "btnMoveMinusX" => (-MoveStep, 0.0, 0.0),
-            "btnMoveMinusY" => (0.0, -MoveStep, 0.0),
-            "btnMoveMinusZ" => (0.0, 0.0, -MoveStep),
-            _ => (0.0, 0.0, 0.0)
-        };
-
-        Viewer.TranslateSelected(dx, dy, dz);
-        Status($"선택 객체 {Viewer.SelectedCount}개를 ({dx}, {dy}, {dz})만큼 이동");
-    });
-
     // ---- 헬퍼 ----------------------------------------------------------------
 
     private void Run(Action action)
@@ -184,4 +161,57 @@ public partial class MainWindow : Window
     }
 
     private void Status(string text) => StatusText.Text = text;
+
+    // ---- 이동 ----------------------------------------------------------------
+
+    /// 축 이동 버튼 한 번당 이동량 (모델 단위). 데모 박스가 100 x 60 x 40이므로 10이 보기 좋다.
+    private const double MoveStep = 10.0;
+
+    private void OnMoveSelected(object sender, RoutedEventArgs e) => Run(() =>
+    {
+        if (sender is not Button button) return;
+        if (Viewer.SelectedCount == 0) { Status("이동할 객체를 먼저 선택하세요"); return; }
+
+        var (dx, dy, dz) = button.Name switch
+        {
+            "btnMovePlusX" => (MoveStep, 0.0, 0.0),
+            "btnMovePlusY" => (0.0, MoveStep, 0.0),
+            "btnMovePlusZ" => (0.0, 0.0, MoveStep),
+            "btnMoveMinusX" => (-MoveStep, 0.0, 0.0),
+            "btnMoveMinusY" => (0.0, -MoveStep, 0.0),
+            "btnMoveMinusZ" => (0.0, 0.0, -MoveStep),
+            _ => (0.0, 0.0, 0.0)
+        };
+
+        Viewer.TranslateSelected(dx, dy, dz);
+        Status($"선택 객체 {Viewer.SelectedCount}개를 ({dx}, {dy}, {dz})만큼 이동");
+    });
+
+    // ---- 회전 ----------------------------------------------------------------
+
+    /// 축 회전 버튼 한 번당 회전 각도 (도).
+    private const double RotateStepDeg = 15.0;
+
+    private void OnRotateSelected(object sender, RoutedEventArgs e) => Run(() =>
+    {
+        if (sender is not Button button) return;
+        if (Viewer.SelectedCount == 0) { Status("회전할 객체를 먼저 선택하세요"); return; }
+
+        // 회전 축은 월드 축 단위 벡터, 방향은 각도의 부호로 표현한다.
+        var (ax, ay, az, angle) = button.Name switch
+        {
+            "btnRotatePlusX"  => (1.0, 0.0, 0.0,  RotateStepDeg),
+            "btnRotatePlusY"  => (0.0, 1.0, 0.0,  RotateStepDeg),
+            "btnRotatePlusZ"  => (0.0, 0.0, 1.0,  RotateStepDeg),
+            "btnRotateMinusX" => (1.0, 0.0, 0.0, -RotateStepDeg),
+            "btnRotateMinusY" => (0.0, 1.0, 0.0, -RotateStepDeg),
+            "btnRotateMinusZ" => (0.0, 0.0, 1.0, -RotateStepDeg),
+            _ => (0.0, 0.0, 0.0, 0.0)
+        };
+        if (angle == 0.0) return;
+
+        Viewer.RotateSelected(ax, ay, az, angle);
+        var axisName = ax != 0.0 ? "X" : ay != 0.0 ? "Y" : "Z";
+        Status($"선택 객체 {Viewer.SelectedCount}개를 {axisName}축 둘레로 {angle}° 회전");
+    });
 }

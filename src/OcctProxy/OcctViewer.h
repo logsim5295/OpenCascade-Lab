@@ -22,6 +22,11 @@
 #include <Quantity_Color.hxx>
 #include <gp_Trsf.hxx>
 #include <gp_Vec.hxx>
+#include <gp_Ax1.hxx>
+#include <gp_Dir.hxx>
+#include <gp_Pnt.hxx>
+#include <Bnd_Box.hxx>
+#include <BRepBndLib.hxx>
 #include <TopLoc_Location.hxx>
 
 namespace OcctProxy
@@ -306,6 +311,57 @@ namespace OcctProxy
           const Handle(AIS_InteractiveObject)& anObj = anIt.Value();
           // aDelta * 기존 변환: 기존 변환을 먼저 적용한 뒤 월드 축 방향으로 이동한다.
           gp_Trsf aNew = aDelta * anObj->LocalTransformation();
+          // SetLocation은 로컬 변환 설정과 함께 선택 엔티티/동적 하이라이트도 갱신한다.
+          myContext()->SetLocation(anObj, TopLoc_Location(aNew));
+        }
+        myContext()->UpdateCurrentViewer();
+      OCCT_CATCH
+    }
+
+    /// 선택된 모든 객체를 각자의 중심을 지나는 월드 축 (ax, ay, az) 둘레로 angleDeg(도)만큼 회전한다.
+    /// 회전 중심은 원본 형상 바운딩 박스의 중심을 현재 로컬 변환으로 옮긴 월드 좌표다.
+    /// (AIS_Shape가 아니거나 박스가 비어 있으면 로컬 변환의 이동 성분을 중심으로 쓴다.)
+    /// AIS 객체의 로컬 변환(LocalTransformation)만 바뀌며 원본 TopoDS_Shape는 그대로다.
+    void RotateSelected(double ax, double ay, double az, double angleDeg)
+    {
+      if (!HasContext()) return;
+      if (ax == 0.0 && ay == 0.0 && az == 0.0) { throw gcnew OcctException("회전 축이 영벡터입니다."); }
+      OCCT_TRY
+        const gp_Dir anAxis(ax, ay, az);
+        const double anAngle = angleDeg * M_PI / 180.0;
+
+        // 선택 목록을 먼저 복사한다 (RemoveSelected와 같은 패턴).
+        NCollection_List<Handle(AIS_InteractiveObject)> aList;
+        for (myContext()->InitSelected(); myContext()->MoreSelected(); myContext()->NextSelected())
+        {
+          aList.Append(myContext()->SelectedInteractive());
+        }
+
+        for (NCollection_List<Handle(AIS_InteractiveObject)>::Iterator anIt(aList); anIt.More(); anIt.Next())
+        {
+          const Handle(AIS_InteractiveObject)& anObj = anIt.Value();
+          const gp_Trsf anOld = anObj->LocalTransformation();
+
+          // 회전 중심: 원본 형상의 바운딩 박스 중심(로컬 좌표)을 현재 변환으로 월드 좌표에 옮긴다.
+          gp_Pnt aCenter(anOld.TranslationPart());
+          Handle(AIS_Shape) aShape = Handle(AIS_Shape)::DownCast(anObj);
+          if (!aShape.IsNull() && !aShape->Shape().IsNull())
+          {
+            Bnd_Box aBox;
+            BRepBndLib::Add(aShape->Shape(), aBox, false);
+            if (!aBox.IsVoid())
+            {
+              double aXmin, aYmin, aZmin, aXmax, aYmax, aZmax;
+              aBox.Get(aXmin, aYmin, aZmin, aXmax, aYmax, aZmax);
+              aCenter = gp_Pnt((aXmin + aXmax) * 0.5, (aYmin + aYmax) * 0.5, (aZmin + aZmax) * 0.5)
+                          .Transformed(anOld);
+            }
+          }
+
+          gp_Trsf aDelta;
+          aDelta.SetRotation(gp_Ax1(aCenter, anAxis), anAngle);
+          // aDelta * 기존 변환: 기존 변환을 먼저 적용한 뒤 중심을 지나는 월드 축 둘레로 회전한다.
+          gp_Trsf aNew = aDelta * anOld;
           // SetLocation은 로컬 변환 설정과 함께 선택 엔티티/동적 하이라이트도 갱신한다.
           myContext()->SetLocation(anObj, TopLoc_Location(aNew));
         }
