@@ -19,6 +19,14 @@ OCCT 8.0.1 DLL (TK*.dll) + 3rd-party DLL (freetype, tbb, jemalloc ...)   ← thi
 
 ![OcctLab.Viewer](docs/viewer-screenshot.png)
 
+## 학습 Wiki
+
+학습 문서는 [프로젝트 Wiki](https://github.com/logsim5295/OpenCascade-Lab/wiki)에서 관리합니다. 전체 6단계 커리큘럼과 실습 안내를 확인할 수 있습니다.
+
+- [학습 체크리스트와 진행도](https://github.com/logsim5295/OpenCascade-Lab/wiki/Progress)
+- [다음 4주 학습 계획](https://github.com/logsim5295/OpenCascade-Lab/wiki/Next-4-Weeks)
+- [Wiki 관리 및 실행 안내](https://github.com/logsim5295/OpenCascade-Lab/wiki/Publishing)
+
 ## 1. 요구 사항
 
 | 항목 | 내용 |
